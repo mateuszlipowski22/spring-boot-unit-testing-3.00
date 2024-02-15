@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +61,7 @@ public class StudentAndGradeServiceTest {
         assertFalse(deletedCollegeStudent.isPresent(),"Return false");
     }
 
+    @Sql("/insertData.sql")
     @Test
     public void getGradebookService(){
         Iterable<CollegeStudent> iterableCollegeStudent = studentService.getGradebook();
@@ -68,7 +70,7 @@ public class StudentAndGradeServiceTest {
             collegeStudentList.add(collegeStudent);
         }
 
-        assertEquals(1, collegeStudentList.size());
+        assertEquals(5, collegeStudentList.size());
     }
 
     @AfterEach
