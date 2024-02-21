@@ -104,6 +104,14 @@ public class StudentAndGradeServiceTest {
         assertTrue(historyGrades.iterator().hasNext(),"Student has history grades");
     }
 
+    @Test
+    public void creatGradeServiceReturnFalse() {
+        assertFalse(studentService.createGrade(105, 1, "math"));
+        assertFalse(studentService.createGrade(-5, 1, "math"));
+        assertFalse(studentService.createGrade(80, 2, "math"));
+        assertFalse(studentService.createGrade(80, 2, "literature"));
+    }
+
     @AfterEach
     public void setUpAfterTransactions(){
         jdbcTemplate.execute("DELETE from student");
