@@ -19,6 +19,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,16 +51,20 @@ public class StudentAndGradeServiceTest {
     @BeforeEach
     public void setUpDatabase(){
         jdbcTemplate.execute("insert into student(id, firstname, lastname, email_address) values (1, 'Eric', 'Foreman', 'eric@wp.pl')");
+
+        jdbcTemplate.execute("insert into math_grade(id, student_id, grade) values (1, 1, 100.00)");
+        jdbcTemplate.execute("insert into science_grade(id, student_id, grade) values (1, 1, 90.00)");
+        jdbcTemplate.execute("insert into history_grade(id, student_id, grade) values (1, 1, 13.00)");
     }
 
 
     @Test
     public void createStudentService(){
-        studentService.createStudent("Chad","Foreman","eric@wp.pl");
+        studentService.createStudent("Chad","Foreman","ericforeman@wp.pl");
 
-        CollegeStudent student = studentDao.findByEmailAddress("eric@wp.pl");
+        CollegeStudent student = studentDao.findByEmailAddress("ericforeman@wp.pl");
 
-        assertEquals("eric@wp.pl",student.getEmailAddress(),"find by email");
+        assertEquals("ericforeman@wp.pl",student.getEmailAddress(),"find by email");
     }
 
     @Test
@@ -99,9 +104,9 @@ public class StudentAndGradeServiceTest {
         Iterable<ScienceGrade> scienceGrades = scienceGradeDao.findGradeByStudentId(1);
         Iterable<HistoryGrade> historyGrades = historyGradeDao.findGradeByStudentId(1);
 
-        assertTrue(mathGrades.iterator().hasNext(),"Student has math grades");
-        assertTrue(scienceGrades.iterator().hasNext(),"Student has science grades");
-        assertTrue(historyGrades.iterator().hasNext(),"Student has history grades");
+        assertTrue(((Collection<MathGrade>) mathGrades).size()==2,"Student has math grades");
+        assertTrue(((Collection<ScienceGrade>) scienceGrades).size()==2,"Student has science grades");
+        assertTrue(((Collection<HistoryGrade>) historyGrades).size()==2,"Student has history grades");
     }
 
     @Test
@@ -115,6 +120,9 @@ public class StudentAndGradeServiceTest {
     @AfterEach
     public void setUpAfterTransactions(){
         jdbcTemplate.execute("DELETE from student");
+        jdbcTemplate.execute("DELETE from math_grade");
+        jdbcTemplate.execute("DELETE from science_grade");
+        jdbcTemplate.execute("DELETE from history_grade");
     }
 
 }
