@@ -1,9 +1,6 @@
 package com.luv2code.springmvc;
 
-import com.luv2code.springmvc.models.CollegeStudent;
-import com.luv2code.springmvc.models.HistoryGrade;
-import com.luv2code.springmvc.models.MathGrade;
-import com.luv2code.springmvc.models.ScienceGrade;
+import com.luv2code.springmvc.models.*;
 import com.luv2code.springmvc.repository.HistoryGradeDao;
 import com.luv2code.springmvc.repository.MathGradeDao;
 import com.luv2code.springmvc.repository.ScienceGradeDao;
@@ -155,4 +152,16 @@ public class StudentAndGradeServiceTest {
         jdbcTemplate.execute("DELETE from history_grade");
     }
 
+    @Test
+    public void studentInformation() {
+        GradebookCollegeStudent gradebookCollegeStudent = studentService.studentInformation(1);
+        assertNotNull(gradebookCollegeStudent.getId());
+        assertEquals(1,gradebookCollegeStudent.getId());
+        assertEquals("Eric",gradebookCollegeStudent.getFirstname());
+        assertEquals("Foreman",gradebookCollegeStudent.getLastname());
+        assertEquals("eric@wp.pl",gradebookCollegeStudent.getEmailAddress());
+        assertTrue(gradebookCollegeStudent.getStudentGrades().getMathGradeResults().size()==1);
+        assertTrue(gradebookCollegeStudent.getStudentGrades().getHistoryGradeResults().size()==1);
+        assertTrue(gradebookCollegeStudent.getStudentGrades().getScienceGradeResults().size()==1);
+    }
 }
