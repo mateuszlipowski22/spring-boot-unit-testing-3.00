@@ -76,10 +76,26 @@ public class StudentAndGradeServiceTest {
     @Test
     public void deleteStudentService(){
         Optional<CollegeStudent> deletedCollegeStudent = studentDao.findById(1);
+        Optional<MathGrade> deletedMathGrade = mathGradeDao.findById(1);
+        Optional<HistoryGrade> deletedHistoryGrade = historyGradeDao.findById(1);
+        Optional<ScienceGrade> deletedScienceGrade = scienceGradeDao.findById(1);
+
         assertTrue(deletedCollegeStudent.isPresent(),"Return true");
+        assertTrue(deletedMathGrade.isPresent(),"Return true");
+        assertTrue(deletedHistoryGrade.isPresent(),"Return true");
+        assertTrue(deletedScienceGrade.isPresent(),"Return true");
+
         studentService.deleteStudent(1);
+
         deletedCollegeStudent = studentDao.findById(1);
+        deletedMathGrade= mathGradeDao.findById(1);
+        deletedHistoryGrade = historyGradeDao.findById(1);
+        deletedScienceGrade = scienceGradeDao.findById(1);
+
         assertFalse(deletedCollegeStudent.isPresent(),"Return false");
+        assertFalse(deletedMathGrade.isPresent(),"Return false");
+        assertFalse(deletedHistoryGrade.isPresent(),"Return false");
+        assertFalse(deletedScienceGrade.isPresent(),"Return false");
     }
 
     @Sql("/insertData.sql")
@@ -109,19 +125,26 @@ public class StudentAndGradeServiceTest {
         assertTrue(((Collection<HistoryGrade>) historyGrades).size()==2,"Student has history grades");
     }
 
+
     @Test
     public void creatGradeServiceReturnFalse() {
+        assertFalse(studentService.createGrade(105, 1, "math"));
+        assertFalse(studentService.createGrade(-5, 1, "math"));
+        assertFalse(studentService.createGrade(80, 2, "math"));
+        assertFalse(studentService.createGrade(80, 2, "literature"));
+    }
+
+    @Test
+    public void deleteGradeService() {
         assertEquals(1,studentService.deleteGrade(1,"math"),"Returns student id after delete");
         assertEquals(1,studentService.deleteGrade(1,"science"),"Returns student id after delete");
         assertEquals(1,studentService.deleteGrade(1,"history"),"Returns student id after delete");
     }
 
     @Test
-    public void deleteGradeService() {
-        assertFalse(studentService.createGrade(105, 1, "math"));
-        assertFalse(studentService.createGrade(-5, 1, "math"));
-        assertFalse(studentService.createGrade(80, 2, "math"));
-        assertFalse(studentService.createGrade(80, 2, "literature"));
+    public void deleteGradeServiceReturnStudentIdOfZero() {
+        assertEquals(0,studentService.deleteGrade(0,"science"),"No student should have 0 id");
+        assertEquals(0,studentService.deleteGrade(0,"literature"),"No student should have a literature grade");
     }
 
     @AfterEach
