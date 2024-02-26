@@ -144,14 +144,6 @@ public class StudentAndGradeServiceTest {
         assertEquals(0,studentService.deleteGrade(0,"literature"),"No student should have a literature grade");
     }
 
-    @AfterEach
-    public void setUpAfterTransactions(){
-        jdbcTemplate.execute("DELETE from student");
-        jdbcTemplate.execute("DELETE from math_grade");
-        jdbcTemplate.execute("DELETE from science_grade");
-        jdbcTemplate.execute("DELETE from history_grade");
-    }
-
     @Test
     public void studentInformation() {
         GradebookCollegeStudent gradebookCollegeStudent = studentService.studentInformation(1);
@@ -163,5 +155,19 @@ public class StudentAndGradeServiceTest {
         assertTrue(gradebookCollegeStudent.getStudentGrades().getMathGradeResults().size()==1);
         assertTrue(gradebookCollegeStudent.getStudentGrades().getHistoryGradeResults().size()==1);
         assertTrue(gradebookCollegeStudent.getStudentGrades().getScienceGradeResults().size()==1);
+    }
+
+    @Test
+    public void studentInformationServiceReturnNull() {
+        GradebookCollegeStudent gradebookCollegeStudent = studentService.studentInformation(0);
+        assertNull(gradebookCollegeStudent.getId());
+    }
+
+    @AfterEach
+    public void setUpAfterTransactions(){
+        jdbcTemplate.execute("DELETE from student");
+        jdbcTemplate.execute("DELETE from math_grade");
+        jdbcTemplate.execute("DELETE from science_grade");
+        jdbcTemplate.execute("DELETE from history_grade");
     }
 }
