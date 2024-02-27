@@ -26,6 +26,35 @@ public class GradebookController {
 
     @GetMapping("/studentInformation/{id}")
     public String studentInformation(@PathVariable int id, Model m) {
+        if(!studentAndGradeService.checkIfStudentIsNull(id)){
+            return "error";
+        }
+
+        GradebookCollegeStudent gradebookCollegeStudent = studentAndGradeService.studentInformation(id);
+
+        m.addAttribute("student", gradebookCollegeStudent);
+
+        if(gradebookCollegeStudent.getStudentGrades().getMathGradeResults().size()>0){
+            m.addAttribute("mathAverage", gradebookCollegeStudent.getStudentGrades()
+                    .findGradePointAverage(gradebookCollegeStudent.getStudentGrades().getMathGradeResults()));
+        }else {
+            m.addAttribute("mathAverage","N/A");
+        }
+
+        if(gradebookCollegeStudent.getStudentGrades().getScienceGradeResults().size()>0){
+            m.addAttribute("scienceAverage", gradebookCollegeStudent.getStudentGrades()
+                    .findGradePointAverage(gradebookCollegeStudent.getStudentGrades().getScienceGradeResults()));
+        }else {
+            m.addAttribute("scienceAverage","N/A");
+        }
+
+        if(gradebookCollegeStudent.getStudentGrades().getHistoryGradeResults().size()>0){
+            m.addAttribute("historyAverage", gradebookCollegeStudent.getStudentGrades()
+                    .findGradePointAverage(gradebookCollegeStudent.getStudentGrades().getHistoryGradeResults()));
+        }else {
+            m.addAttribute("historyAverage","N/A");
+        }
+
         return "studentInformation";
     }
 
