@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -173,5 +174,32 @@ public class StudentAndGradeService {
 
         return gradebookCollegeStudent;
 
+    }
+
+    public void configureStudentInformationModel(int id, Model model){
+        GradebookCollegeStudent gradebookCollegeStudent = studentInformation(id);
+
+        model.addAttribute("student", gradebookCollegeStudent);
+
+        if(gradebookCollegeStudent.getStudentGrades().getMathGradeResults().size()>0){
+            model.addAttribute("mathAverage", gradebookCollegeStudent.getStudentGrades()
+                    .findGradePointAverage(gradebookCollegeStudent.getStudentGrades().getMathGradeResults()));
+        }else {
+            model.addAttribute("mathAverage","N/A");
+        }
+
+        if(gradebookCollegeStudent.getStudentGrades().getScienceGradeResults().size()>0){
+            model.addAttribute("scienceAverage", gradebookCollegeStudent.getStudentGrades()
+                    .findGradePointAverage(gradebookCollegeStudent.getStudentGrades().getScienceGradeResults()));
+        }else {
+            model.addAttribute("scienceAverage","N/A");
+        }
+
+        if(gradebookCollegeStudent.getStudentGrades().getHistoryGradeResults().size()>0){
+            model.addAttribute("historyAverage", gradebookCollegeStudent.getStudentGrades()
+                    .findGradePointAverage(gradebookCollegeStudent.getStudentGrades().getHistoryGradeResults()));
+        }else {
+            model.addAttribute("historyAverage","N/A");
+        }
     }
 }
