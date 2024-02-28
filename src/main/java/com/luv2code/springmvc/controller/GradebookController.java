@@ -64,15 +64,24 @@ public class GradebookController {
         if(!studentAndGradeService.checkIfStudentIsNull(studentId)){
             return "error";
         }
-
         boolean success = studentAndGradeService.createGrade(grade, studentId, gradeType);
-
         if(!success){
+            return "error";
+        }
+        studentAndGradeService.configureStudentInformationModel(studentId, model);
+        return "studentInformation";
+    }
+
+    @GetMapping("/grades/{id}/{gradeType}")
+    public String deleteGrade(@PathVariable int id,@PathVariable String gradeType, Model model) {
+
+        int studentId = studentAndGradeService.deleteGrade(id, gradeType);
+
+        if(studentId==0){
             return "error";
         }
 
         studentAndGradeService.configureStudentInformationModel(studentId, model);
-
         return "studentInformation";
     }
 }
