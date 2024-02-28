@@ -25,12 +25,12 @@ public class GradebookController {
 
 
     @GetMapping("/studentInformation/{id}")
-    public String studentInformation(@PathVariable int studentId, Model model) {
-        if(!studentAndGradeService.checkIfStudentIsNull(studentId)){
+    public String studentInformation(@PathVariable int id, Model model) {
+        if(!studentAndGradeService.checkIfStudentIsNull(id)){
             return "error";
         }
 
-        studentAndGradeService.configureStudentInformationModel(studentId, model);
+        studentAndGradeService.configureStudentInformationModel(id, model);
 
         return "studentInformation";
     }
