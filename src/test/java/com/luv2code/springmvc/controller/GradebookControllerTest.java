@@ -264,6 +264,33 @@ class GradebookControllerTest {
         assertFalse(mathGrade.isPresent());
     }
 
+    @Test
+    public void deleteAValidGradeHttpRequestStudentIdDoesNotExistEmptyResponse() throws Exception{
+        Optional<MathGrade> mathGrade = mathGradeDao.findById(1);
+
+        assertTrue(mathGrade.isPresent());
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/grades/{id}/{gradeTypes}",2,"math"))
+                .andExpect(status().isOk()).andReturn();
+
+        ModelAndView mav = mvcResult.getModelAndView();
+        ModelAndViewAssert.assertViewName(mav,"error");
+    }
+
+    @Test
+    public void deleteANonValidGradeHttpRequest() throws Exception{
+        Optional<MathGrade> mathGrade = mathGradeDao.findById(1);
+
+        assertTrue(mathGrade.isPresent());
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/grades/{id}/{gradeTypes}",1,"literature"))
+                .andExpect(status().isOk()).andReturn();
+
+        ModelAndView mav = mvcResult.getModelAndView();
+        ModelAndViewAssert.assertViewName(mav,"error");
+
+    }
+
     @AfterEach
     public void setUpAfterTransactions(){
         jdbcTemplate.execute(sqlDeleteStudent);
